@@ -5,57 +5,59 @@ const Intern = require('./lib/Intern');
 const Manager = require('./lib/Manager');
 const generateHTML = require('./src/generateHTML');
 
-const team = [];
-
 
 // questions applying to all employees
-const addEmployee = [
-    {
-        type: 'input',
-        name: 'name',
-        message: "What is your new employee's name? (Required)",
-        validate: employeeInput => {
-            if (employeeInput) {
-              return true;
-            } else { 
-              console.log("Please enter new employee's name!");
-              return false;
+const addEmployee = () => {
+    return inquirer.prompt(
+        [
+            {
+                type: 'input',
+                name: 'name',
+                message: "What is your new employee's name? (Required)",
+                validate: nameInput => {
+                    if (nameInput) {
+                      return true;
+                    } else { 
+                      console.log("Please enter new employee's name!");
+                      return false;
+                    }
+                  } 
+            },
+            {
+                type: 'input',
+                name: 'id',
+                message: "What is your new employee's ID number? (Required)",
+                validate: idInput => {
+                    if (idInput) {
+                      return true;
+                    } else { 
+                      console.log("Please enter new employee's ID number!");
+                      return false;
+                    }
+                  } 
+            },
+            {
+                type: 'input',
+                name: 'email',
+                message: "What is your new employee's email address? (Required)",
+                validate: emailInput => {
+                    if (emailInput) {
+                      return true;
+                    } else { 
+                      console.log("Please enter new employee's email address!");
+                      return false;
+                    }
+                  } 
+            },
+            {
+                type: 'list',
+                name: 'role',
+                message: "What is your new employee's role?",
+                choices: ['Engineer', 'Intern', 'Manager']
             }
-          } 
-    },
-    {
-        type: 'input',
-        name: 'id',
-        message: "What is your new employee's ID number? (Required)",
-        validate: idInput => {
-            if (idInput) {
-              return true;
-            } else { 
-              console.log("Please enter new employee's ID number!");
-              return false;
-            }
-          } 
-    },
-    {
-        type: 'input',
-        name: 'email',
-        message: "What is your new employee's email address? (Required)",
-        validate: emailInput => {
-            if (emailInput) {
-              return true;
-            } else { 
-              console.log("Please enter new employee's email address!");
-              return false;
-            }
-          } 
-    },
-    {
-        type: 'list',
-        name: 'role',
-        message: "What is your new employee's role?",
-        choices: ['Engineer', 'Intern', 'Manager']
-    }
-];
+        ]
+    )
+}; 
 
 // engineer only
 const addEngineer = () => {
@@ -111,6 +113,7 @@ const addManager = () => {
                 validate: officeInput => {
                     if (officeInput) {
                       return true;
+                      
                     } else { 
                       console.log("Please enter new Manager's office number!");
                       return false;
@@ -119,6 +122,7 @@ const addManager = () => {
             }
         ]
     )
+    
 }; 
 
 // function to write HTML file
@@ -134,17 +138,24 @@ function writeToFile(fileName, data) {
 
     // function to initialize app
 function init() {
-    inquirer
-  .prompt(addEmployee)
-  .then((answer) => {
-    if (answer.role === 'Engineer') {addEngineer()};
-    if (answer.role === 'Intern') {addIntern()};
-    if (answer.role === 'Manager') {addManager()};
+addEmployee()
+  .then(function (data) {
+    if (data.role === 'Engineer') {
+        addEngineer(new Engineer);
+    } else if (data.role === 'Intern') {
+        addIntern(new Intern);     
+    } else {
+        addManager(new Manager);    
+    }
+    
   })
-  .then(function (data){
+  .then(function (data) {
     let fileName = 'index.html';
     writeToFile = (fileName, data)
-  })
+  });
+  
   };
+  
 
+  
   init();
