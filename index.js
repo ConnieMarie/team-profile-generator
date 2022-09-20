@@ -5,6 +5,7 @@ const Intern = require('./lib/Intern');
 const Manager = require('./lib/Manager');
 const generateHTML = require('./src/generateHTML');
 
+const employeeArr = [];
 
 // questions applying to all employees
 const addEmployee = () => {
@@ -53,7 +54,7 @@ const addEmployee = () => {
                 type: 'list',
                 name: 'role',
                 message: "What is your new employee's role?",
-                choices: ['Engineer', 'Intern', 'Manager']
+                choices: ['Engineer', 'Intern']
             }
         ]
     )
@@ -77,7 +78,8 @@ const addEngineer = () => {
                   } 
             }
         ]
-    )  
+    )
+      
 };
 
 
@@ -118,15 +120,20 @@ const addManager = () => {
                       console.log("Please enter new Manager's office number!");
                       return false;
                     }
-                  } 
+                  }
+                  
             }
+            
         ]
+        
     )
     
 }; 
 
+
 // function to write HTML file
 function writeToFile(fileName, data) {
+    console.log(data);
     let fileContent = generateHTML(data);
       fs.writeFile(fileName, fileContent, data, err => {
         if (err) {
@@ -134,28 +141,101 @@ function writeToFile(fileName, data) {
         }
         console.log('Team profile created!')
       });
+      
     };
-
+    
     // function to initialize app
-function init() {
+ function init() {
 addEmployee()
-  .then(function (data) {
+  .then(async function (data) {
     if (data.role === 'Engineer') {
-        addEngineer(new Engineer);
+    
+    let {username} = await addEngineer();
+    let engineer = new Engineer(data.name, data.id, data.email, username)
+    console.log(engineer);
+    return engineer;
     } else if (data.role === 'Intern') {
-        addIntern(new Intern);     
+      let {school} = await addIntern();
+      let intern = new Intern(data.name, data.id, data.email, school)
+      return intern;     
     } else {
-        addManager(new Manager);    
+
     }
     
-  })
+  }) 
   .then(function (data) {
-    let fileName = 'index.html';
-    writeToFile = (fileName, data)
+    employeeArr.push(data)
+    inquirer.prompt([{
+      name: 'continue',
+      type: 'confirm',
+      message: 'Would you like to add anymore employees?'
+    }]).then (answer => {
+      if (answer.continue) {
+        init();
+      } else {
+        let fileName = 'index.html';
+        writeToFile(fileName, employeeArr)
+      }
+    })
+    
   });
   
   };
   
 
   
-  init();
+  inquirer.prompt(
+    [
+        {
+            type: 'input',
+            name: 'name',
+            message: "What is your new manager's name? (Required)",
+            validate: nameInput => {
+                if (nameInput) {
+                  return true;
+                } else { 
+                  console.log("Please enter new manager's name!");
+                  return false;
+                }
+              } 
+        },
+        {
+            type: 'input',
+            name: 'id',
+            message: "What is your new manager's ID number? (Required)",
+            validate: idInput => {
+                if (idInput) {
+                  return true;
+                } else { 
+                  console.log("Please enter new manager's ID number!");
+                  return false;
+                }
+              } 
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message: "What is your new manager's email address? (Required)",
+            validate: emailInput => {
+                if (emailInput) {
+                  return true;
+                } else { 
+                  console.log("Please enter new manager's email address!");
+                  return false;
+                }
+              } 
+        },
+        
+    ]
+)
+  .then(async function (data) {
+  
+      let {officeNumber} = await addManager();
+      console.log(officeNumber);
+      let manager = new Manager(data.name, data.id, data.email, officeNumber)
+      employeeArr.push(manager)
+      console.log(`\n \n Team Data \n \n`)  
+      init(); 
+    }
+    
+  ) 

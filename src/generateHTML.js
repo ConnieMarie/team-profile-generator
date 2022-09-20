@@ -1,48 +1,55 @@
+const Employee = require("../lib/Employee");
+
 // function to general employee card specific to role
 function renderEmployeeHTML(data) {
-    if (data.role === 'Engineer') {
+    let content = data.map(emp => {
+        emp.role = emp.getRole();
+    if (emp.role === 'Engineer') {
         return `<div class="card m-3 shadow rounded" style="width: 18rem;">
     <div class="card-header bg-primary text-white">
-        <h5 class="card-title">${getName()}</h5>
-        <h6 class="card-subtitle mb-2"><i class="fa-solid fa-glasses m-2"></i>${getRole()}</h6>
+        <h5 class="card-title">${emp.getName()}</h5>
+        <h6 class="card-subtitle mb-2"><i class="fa-solid fa-glasses m-2"></i>${emp.getRole()}</h6>
     </div>
     <div class="card-body bg-light">
         <ul class="list-group list-group-flush border">
-            <li class="list-group-item">${getId()}</li>
-            <li class="list-group-item">${getEmail()}</li>
-            <li class="list-group-item">${getGitHub()}</li>
+            <li class="list-group-item">${emp.getId()}</li>
+            <li class="list-group-item">${emp.getEmail()}</li>
+            <li class="list-group-item">${emp.getGitHub()}</li>
         </ul>
     </div>
 </div>`
-    } else if (data.role === 'Intern') {
+    } else if (emp.role === 'Intern') {
         return `<div class="card m-3 shadow rounded" style="width: 18rem;">
     <div class="card-header bg-primary text-white">
-        <h5 class="card-title">${getName()}</h5>
-        <h6 class="card-subtitle mb-2"><i class="fa-solid fa-graduation-cap m-2"></i>${getRole()}</h6>
+        <h5 class="card-title">${emp.getName()}</h5>
+        <h6 class="card-subtitle mb-2"><i class="fa-solid fa-graduation-cap m-2"></i>${emp.getRole()}</h6>
     </div>
     <div class="card-body bg-light">
         <ul class="list-group list-group-flush border">
-            <li class="list-group-item">${getId()}</li>
-            <li class="list-group-item">${getEmail()}</li>
-            <li class="list-group-item">${getSchool()}</li>
+            <li class="list-group-item">${emp.getId()}</li>
+            <li class="list-group-item">${emp.getEmail()}</li>
+            <li class="list-group-item">${emp.getSchool()}</li>
         </ul>
     </div>
 </div>`
     } else {
         return `<div class="card m-3 shadow rounded" style="width: 18rem;">
     <div class="card-header bg-primary text-white">
-        <h5 class="card-title">${getName()}</h5>
-        <h6 class="card-subtitle mb-2"><i class="fa-solid fa-mug-hot m-2"></i>${getRole()}</h6>
+        <h5 class="card-title">${emp.getName()}</h5>
+        <h6 class="card-subtitle mb-2"><i class="fa-solid fa-mug-hot m-2"></i>${emp.getRole()}</h6>
     </div>
     <div class="card-body bg-light">
         <ul class="list-group list-group-flush border">
-            <li class="list-group-item">${getId()}</li>
-            <li class="list-group-item">${getEmail()}</li>
-            <li class="list-group-item">${getOfficeNumber()}</li>
+            <li class="list-group-item">${emp.getId()}</li>
+            <li class="list-group-item">${emp.getEmail()}</li>
+            <li class="list-group-item">${emp.getOfficeNumber()}</li>
         </ul>
     </div>
 </div>`
     }
+    
+    })
+    return(content.join(","));
     
 };
 
