@@ -67,9 +67,9 @@ function generateHTML(data) {
     <body>
         <div class="container">
             <div class="row">
-                <header class="col-12 bg-danger m-2">
-                    <h1 class="text-center text-white">My Team</h1>
-                </header>
+                <nav class="navbar col-12 bg-danger m-2" style="height: 10vh;">
+                    <span class="text-center text-white mb-0 h1 w-100">My Team</span>
+                </nav>
             </div>
         </div>
         <div class="container">
