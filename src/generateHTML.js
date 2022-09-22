@@ -48,7 +48,7 @@ function renderEmployeeHTML(data) {
 </div>`;
     }
   });
-  return content.join(",");
+  return content.join("");
 }
 
 //function to generate page HTML
